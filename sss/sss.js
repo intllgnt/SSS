@@ -77,7 +77,6 @@ $.fn.sss = function(options) {
 	slider.append('<div class="sssprev"/>', '<div class="sssnext"/>');
 	next = slider.find('.sssnext');
 	prev = slider.find('.sssprev');
-
 	}
 
 	return this.each(function() {
