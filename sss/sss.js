@@ -7,14 +7,17 @@ $.fn.sss = function(options) {
 // Options
 
 	var settings = $.extend({
-	'slideshow' : 'true',
-	'speed' : 3500,
-	'show_nav' : 'true'
+	slideShow : true,
+	startingSlide : 0,
+	speed : 3500,
+	showNav : true
 	}, options);
+
+	return this.each(function() {
 
 // Setup
 
-	this.children().wrapAll('<div class="sss"/>').addClass('ssslide');
+	$(this).children().wrapAll('<div class="sss"/>').addClass('ssslide');
 
 // Variables
 
@@ -22,17 +25,16 @@ $.fn.sss = function(options) {
 	slider = $(this).find('.sss'),
 	slides = slider.find('.ssslide'),
 	slide_count = slides.length,
-	target = 0,
+	starting_slide = settings.startingSlide,
+	target = starting_slide > slide_count - 1 ? 0 : starting_slide,
 	animating = false,
 	clicked,
 	timer,
-	key,
-	next,
-	prev;
+	key;
 
 // Reset Slideshow
 
-	var reset_timer = settings.slideshow === 'true' ? function() {
+	var reset_timer = settings.slideShow ? function() {
 	clearTimeout(timer);
 	timer = setTimeout(next_slide, settings.speed);
 	} : $.noop;
@@ -73,23 +75,22 @@ $.fn.sss = function(options) {
 	animate_slide(target);
 	}
 
-	if (settings.show_nav === 'true' ) {
+	if (settings.showNav) {
 	slider.append('<div class="sssprev"/>', '<div class="sssnext"/>');
-	next = slider.find('.sssnext');
-	prev = slider.find('.sssprev');
 	}
 
-	return this.each(function() {
+	var next = slider.find('.sssnext'),
+	prev = slider.find('.sssprev');
+
 	$(window).load(function() {
 
-	slider.css({paddingBottom: get_height(0)}).click(function(e) {
+	slider.css({paddingBottom: get_height(target)}).click(function(e) {
 	clicked = $(e.target);
 	if (clicked.is(next)) { next_slide() }
-	if (clicked.is(prev)) { prev_slide() }
+	else if (clicked.is(prev)) { prev_slide() }
 	});
 
-	slides.eq(0).fadeIn();
-	reset_timer();
+	animate_slide(target);
 
 	$(document).keydown(function(e) {
 	key = e.keyCode;
