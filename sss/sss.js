@@ -47,6 +47,7 @@ $.fn.sss = function(options) {
 	}
 
 	function animate_slide(target) {
+	if ( $( wrapper ).hasClass( 'sss-hover' ) ) { reset_timer(); return; }
 	if (!animating) {
 	animating = true;
 	var target_slide = slides.eq(target);
@@ -98,6 +99,14 @@ $.fn.sss = function(options) {
 	if (key === 39) { next_slide() }
 	else if (key === 37) { prev_slide() }
 	});
+
+	$( wrapper ).hover(
+	function() {
+	$( wrapper ).addClass( 'sss-hover' );
+	}, function() {
+	$( wrapper ).removeClass( 'sss-hover' );
+	}
+	);
 
 	});
 // End
